@@ -48,23 +48,30 @@ cate_bin_size = (512, 128, 256, 256, 64, 256, 256, 16, 256)
 
 def get_criteo_data_df(params):
     df = pd.read_csv(params["data_path"], sep="\t", header=None)
+    print(df.head())
+    #第一列是所有样本点击的时间戳
     click_ts = df[df.columns[0]].to_numpy()
+    #第二列是所有样本支付的时间戳，没有就是-1
     pay_ts = df[df.columns[1]].fillna(-1).to_numpy()
-
+    #将时间戳排除之后的其他列的特征
     df = df[df.columns[2:]]
+    #其他其他都是类别型的特征，hash之后的表示
     for c in df.columns[8:]:
         df[c] = df[c].fillna("")
         df[c] = df[c].astype(str)
+    #8个整数类型的特征
     for c in df.columns[:8]:
         df[c] = df[c].fillna(-1)
         df[c] = (df[c] - df[c].min())/(df[c].max() - df[c].min())
     df.columns = [str(i) for i in range(17)]
     df.reset_index(inplace=True)
     data = []
+    #后面的类别型特征
     for i in range(8, 17):
         c = str(i)
         hash_value = pd.util.hash_array(df[c].to_numpy()) % cate_bin_size[i-8]
         data.append(hash_value.reshape(-1, 1))
+    #前面的数值型特征
     for i in range(8):
         c = str(i)
         labels = list(range(num_bin_size[i]))

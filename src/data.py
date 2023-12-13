@@ -276,6 +276,7 @@ def get_dataset(params):
     name = params["dataset"]
     data_type = params["data_type"]
     print("loading datasest {}".format(name))
+    #df是数值型和类别型特征，click是点击的时间戳，pay是支付的时间戳
     df, click_ts, pay_ts = get_criteo_data_df(params)
     data = DataDF(df, click_ts, pay_ts)
     dm, de = 30, 60

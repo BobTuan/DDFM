@@ -111,7 +111,7 @@ if __name__ == "__main__":
                         help="FSIW needs two pretrained weighting model")
     parser.add_argument("--batch_size", type=int,
                         default=1024)
-    parser.add_argument("--epoch", type=int, default=5,
+    parser.add_argument("--epoch", type=int, default=1,
                         help="training epoch of pretraining")
 
     # Hyperparameters
